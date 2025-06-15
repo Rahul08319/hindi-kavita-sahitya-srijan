@@ -21,7 +21,7 @@ export const ImageTab = ({ generatedImage, isGeneratingImage, generatedStory, on
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            कहानी के आधार पर AI इमेज बनाई जाएगी (Hugging Face Stable Diffusion का उपयोग)
+            कहानी के विषय और भावनाओं के आधार पर विशेष AI इमेज बनाई जाएगी
           </p>
           <Button 
             onClick={onGenerateImage} 
