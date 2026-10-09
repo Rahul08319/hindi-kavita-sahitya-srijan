@@ -1,73 +1,209 @@
-# Welcome to your Lovable project
+<div align="center">
 
-## Project info
+# 🪶 हिंदी कविता साहित्य सृजन
+### *Hindi Kavita Sahitya Srijan Studio*
+**काव्य, कल्पना और कलारूप का आधुनिक डिजिटल संगम**
 
-**URL**: https://lovable.dev/projects/7677f337-65bf-461e-a02f-826db92102e0
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-5.4-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Apple HIG](https://img.shields.io/badge/Design-Apple%20HIG%202025-000000?style=for-the-badge&logo=apple&logoColor=white)](https://developer.apple.com/design/human-interface-guidelines/)
+[![Perpetual Update](https://img.shields.io/badge/Updates-Perpetual%20Dynamic-EA580C?style=for-the-badge&logo=clockify&logoColor=white)](#-स्वचालित-वार्षिक-एवं-दैनिक-नवीनीकरण-perpetual-automation)
 
-## How can I edit this code?
+<p align="center">
+  <b>✨ Apple Liquid Glass • यथार्थवादी सुलेखन पोस्टर • दैनिक काव्य पंचांग • सस्वर पाठ (TTS) • बहु-विधा सृजन ✨</b>
+</p>
 
-There are several ways of editing your application.
+[✨ मुख्य विशेषताएं](#-मुख्य-विशेषताएं-key-features) •
+[📱 Apple Bento Grid](#-apple-bento-grid-आर्किटेक्चर) •
+[🎨 चित्रशाला](#-यथार्थवादी-कलात्मक-चित्रशाला-aesthetic-art-studio) •
+[🚀 त्वरित शुरुआत](#-त्वरित-शुरुआत-quick-start) •
+[🔄 स्वचालित लॉजिक](#-स्वचालित-वार्षिक-एवं-दैनिक-नवीनीकरण-perpetual-automation)
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/7677f337-65bf-461e-a02f-826db92102e0) and start prompting.
+</div>
 
-Changes made via Lovable will be committed automatically to this repo.
+## 📖 परिचय (Overview)
 
-**Use your preferred IDE**
+**हिंदी कविता साहित्य सृजन** एक उत्कृष्ट, कलात्मक एवं आधुनिक डिजिटल साहित्य मंच है जिसे **Apple Human Interface Guidelines (HIG)** और **2025 Liquid Glass** डिज़ाइन दर्शन के आधार पर गढ़ा गया है। 
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+यह मंच हिंदी साहित्य के अमर पुरोधाओं—**सूर्यकांत त्रिपाठी 'निराला', रामधारी सिंह 'दिनकर', हरिवंश राय बच्चन, महादेवी वर्मा, संत कबीरदास, गोस्वामी तुलसीदास**—के साथ-साथ विश्व एवं तांग कालीन चीनी क्लासिक्स (**ली बाई, दू फू, वांग वेई**) और सूफी साहित्य (**रूमी**) का एक सुरुचिपूर्ण डिजिटल सेतु प्रस्तुत करता है।
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## 🍱 Apple Bento Grid आर्किटेक्चर
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+एप्लिकेशन की मुख्य स्क्रीन पर Apple सिग्नेचर ज़ीरो-गैप बेंटो ग्रिड तकनीक का प्रयोग किया गया है:
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+```text
+┌───────────────────────────────────────────────┬─────────────────────────────┐
+│  ✦ आज की अमर रचना (Poem of the Day)           │  🍃 वर्तमान ऋतु चक्र (Ritu) │
+│  "वर्षों तक वन में घूम-घूम, बाधा-विघ्नों..."   │  वसंत / ग्रीष्म / वर्षा /   │
+│  रचयिता: रामधारी सिंह 'दिनकर' (वीर रस)        │  शरद / हेमंत / शिशिर        │
+│  [🔊 सस्वर पाठ]  [📋 कॉपी]  [🎨 पोस्टर बनाएं]  │  कैलेंडर के अनुसार स्वतः    │
+├───────────────────────────────────────────────┴─────────────────────────────┤
+│  🖋️ नवरस एवं अमृत छंद विधान                                                  │
+│  • शृंगार (रति)   • वीर (उत्साह)   • शांत (निर्वेद)   • करुण (शोक)          │
+│  • दोहा (१३-११)  • चौपाई (१६-१६)  • सोरठा (११-१३)    • ग़ज़ल (बह़र)         │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
+---
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+## ✨ मुख्य विशेषताएं (Key Features)
+
+### १. ✍️ बहु-विधा काव्य एवं गद्य सृजन (Creative Studio)
+- **विविध विधाएं**: कविता, दोहा, कहानी/गद्य, ग़ज़ल, एवं मुक्तक।
+- **नवरस चयन**: शांत रस, वीर रस, शृंगार रस, करुण रस, अद्भुत रस, हास्य रस।
+- **कवि प्रेरणा शैलियां**: निराला, दिनकर, कबीर, बच्चन, महादेवी, चीनी तांग क्लासिक्स, एवं सूफी परंपरा।
+- **शिल्प एवं छंद विश्लेषण**: प्रत्येक रचना के साथ छंद संरचना, तुकबंदी युग्म (rhymes), और कठिन शब्दार्थ स्वतः प्रस्तुत होते हैं।
+- **सस्वर पाठ (Speech Synthesis Recitation)**: प्राकृतिक हिंदी आवाज़ में वास्तविक समय ऑडियो तरंगे (animated waveforms) के साथ कविता सुनने की सुविधा।
+
+### २. 🎨 यथार्थवादी कलात्मक चित्रशाला (Realistic Art Studio)
+- **१२०० × ८०० पिक्सल Retina 2x** रिज़ॉल्यूशन पर HTML5 Canvas द्वारा संचालित।
+- **५ यथार्थवादी ऐतिहासिक एवं आधुनिक शैलियां**:
+  1. **शाही स्वर्ण पाण्डुलिपि (Royal Parchment)**: भोजपत्र टेक्सचर, स्वर्णिम नक्काशी, कॉर्नर ब्रैकेट्स और पारंपरिक लाल शाही मुहर ("साहित्य सृजन मुद्रा")।
+  2. **चांदनी रात्रि व नीरवता (Moonlit Twilight)**: गहरा नील गगन, चमकता पूर्ण चंद्र, पर्वतमाला और जल-प्रतिबिंब।
+  3. **कुहासा और पर्वतीय वन (Misty Ink Mountains)**: पारंपरिक सुमी-ए स्याही पर्वत, बांस के कुंज और कोहरा।
+  4. **वसंत और पलाश पुष्प (Spring Blossoms)**: उषाकाल का स्वर्णिम आकाश, पलाश के फूल और बिखरती पंखुड़ियां।
+  5. **ओलेड मिनिमलिस्ट ग्लास (Apple Obsidian Glass)**: गहरा कृष्ण वर्ण (`#000000`), फ्रॉस्टेड ग्लास इनर कार्ड, टाइटेनियम रिम और सुलेखन।
+- **एक-क्लिक PNG डाउनलोड**: उच्च गुणवत्ता में सीधे फोन या कंप्यूटर में सुरक्षित करें।
+
+### ३. 📚 अमर काव्य ग्रंथावली (Classic Literature Library)
+- कबीर, तुलसीदास, दिनकर ("रश्मिरथी"), निराला ("वर दे, वीणावादिनि"), बच्चन ("अग्निपथ"), महादेवी वर्मा ("मैं नीर भरी दुख की बदली"), ली बाई ("शांत रात्रि की सोच"), दू फू और रूमी की अमर कृतियों का संग्रह।
+- रचयिता, विधा, एवं रस के आधार पर तीव्र खोज और फ़िल्टर।
+- एक-क्लिक में किसी भी कविता को सीधे पोस्टर निर्माण हेतु चित्रशाला में भेजने की सुविधा।
+
+### ४. 🌐 सोशल मीडिया साझाकरण (Apple Share Sheet Integration)
+- **एक-क्लिक डायरेक्ट शेयर**: WhatsApp, X (Twitter), Telegram, एवं सिस्टम क्लिपबोर्ड।
+- **Apple Native Web Share API**: मोबाइल पर नेटिव शेयर शीट का उपयोग।
+- **Facebook Graph API**: पेज अथवा पर्सनल प्रोफ़ाइल फीड पर सीधे प्रकाशन हेतु टोकन सपोर्ट और लाइव पोस्ट प्रीव्यू।
+
+---
+
+## 🔄 स्वचालित वार्षिक एवं दैनिक नवीनीकरण (Perpetual Automation)
+
+इस प्रोजेक्ट में आने वाले वर्षों (२०२६, २०२७, २०२८ और आगे) के लिए पूर्ण स्वचालित तर्क जोड़ा गया है:
+
+1. **गतिशील वर्ष एवं संवत गणना (`src/lib/dynamicYear.ts`)**:
+   - `new Date().getFullYear()` द्वारा वर्तमान ईस्वी सन् की गणना।
+   - विक्रम संवत की वास्तविक गणना (`currentYear + 57`)।
+   - देवनागरी अंकों में स्वतः रूपांतरण (`२०२६`, `२०२७`...)।
+   - कॉपीराइट फुटर: `© 2024–{currentYear}` कभी पुराना नहीं पड़ता।
+
+2. **दैनिक खगोलीय काव्य चक्र (Daily Deterministic Rotation)**:
+   - वर्ष के दिन (`dayOfYear`) और वर्ष संख्या के आधार पर आज की कविता बिना किसी सर्वर या मैन्युअल अपडेट के प्रतिदिन स्वतः बदलती है।
+
+3. **भारतीय ऋतु चक्र (Six Indian Ritus)**:
+   - सौर मास के अनुसार वर्तमान ऋतु (वसंत, ग्रीष्म, वर्षा, शरद, हेमंत, शिशिर) की पहचान और तद्नुसार काव्य रस की स्वतः अनुशंसा।
+
+4. **GitHub Actions दैनिक हार्टबीट (`.github/workflows/daily-sahitya-pulse.yml`)**:
+   - प्रतिदिन मध्यरात्रि UTC पर स्वचालित रूप से बिल्ड सत्यापन और दैनिक रोटेशन चेक चलाता है, जिससे आपकी गिटहब रिपॉजिटरी निरंतर सक्रिय और ग्रीन रहती है।
+
+---
+
+## 🍏 Apple Design System & Tokens
+
+यह प्रोजेक्ट Apple के तीन मूलभूत HIG सिद्धांतों पर आधारित है:
+- **Clarity (स्पष्टता)**: सैन फ्रांसिस्को / प्लस जकार्ता सैन्स और देवनागरी रोज़हा वन का सुस्पष्ट टाइपोग्राफी सोपान।
+- **Deference (विनम्रता)**: लाइट-मोड डिफ़ॉल्ट (`#fbfbfd`) जिसमें विषय-वस्तु प्रमुख रहती है और क्रोम पृष्ठभूमि में रहता है।
+- **Depth (गहराई)**: लिक्विड ग्लास (`backdrop-filter: blur(20px) saturate(180%)`), स्क्वर्किल्स और भौतिकी-आधारित स्प्रिंग मोशन (`cubic-bezier(0.16, 1, 0.3, 1)`)।
+
+```css
+/* Liquid Glass Material Tokens */
+--apple-glass-bg: rgba(255, 255, 255, 0.72);
+--apple-glass-border: rgba(0, 0, 0, 0.07);
+--apple-card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+
+/* Dark Mode OLED Obsidian */
+--background: 0 0% 0%; /* Pure OLED Black */
+--apple-glass-bg: rgba(24, 24, 27, 0.75);
+--apple-glass-border: rgba(255, 255, 255, 0.12);
+```
+
+---
+
+## 🚀 त्वरित शुरुआत (Quick Start)
+
+### आवश्यकताएं
+- Node.js १८+ अथवा २०+
+- npm अथवा yarn / bun
+
+### संस्थापन (Installation)
+
+```bash
+# १. रिपॉजिटरी क्लोन करें
+git clone https://github.com/Rahul08319/hindi-kavita-sahitya-srijan.git
+
+# २. निर्देशिका में प्रवेश करें
+cd hindi-kavita-sahitya-srijan
+
+# ३. आवश्यक पैकेज इंस्टॉल करें
+npm install
+
+# ४. लोकल डेवलपमेंट सर्वर चलाएं
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+ब्राउज़र में `http://localhost:8080` खोलें।
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### प्रोडक्शन बिल्ड (Production Build)
 
-**Use GitHub Codespaces**
+```bash
+npm run build
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## 📂 प्रोजेक्ट संरचना (Project Architecture)
 
-This project is built with:
+```
+hindi-kavita-sahitya-srijan/
+├── .github/
+│   └── workflows/
+│       └── daily-sahitya-pulse.yml  # दैनिक स्वचालित गिटहब वर्कफ़्लो
+├── public/                          # स्थिर संपत्तियां
+├── src/
+│   ├── components/
+│   │   ├── AppleBentoGrid.tsx       # दैनिक काव्य एवं ऋतु चक्र बेंटो कार्ड
+│   │   ├── StoryTab.tsx             # बहु-विधा काव्य व गद्य सृजन स्टूडियो
+│   │   ├── ImageTab.tsx             # यथार्थवादी कलात्मक पोस्टर जनरेटर
+│   │   ├── LibraryTab.tsx           # अमर क्लासिक्स एवं खोज पुस्तकालय
+│   │   ├── SocialTab.tsx            # Apple शेयर शीट व Facebook इंटीग्रेशन
+│   │   └── ui/                      # shadcn/ui प्रिमिटिव्स
+│   ├── data/
+│   │   ├── sahityaData.ts           # अमर कविताएं, कवि प्रोफ़ाइल, छंद व रस बैंक
+│   │   └── chinesePoets.ts          # क्लासिकल चीनी काव्य संकलन
+│   ├── hooks/
+│   │   ├── useStoryGenerator.ts     # काव्य सृजन व सस्वर पाठ हुक
+│   │   ├── useImageGenerator.ts     # ५ यथार्थवादी कैनवास पोस्टर शैलियां हुक
+│   │   └── useFacebookPoster.ts     # सोशल शेयर व Facebook Graph API हुक
+│   ├── lib/
+│   │   ├── dynamicYear.ts           # गतिशील वर्ष, संवत व ऋतु गणना इंजन
+│   │   └── utils.ts                 # क्लास मर्जिंग यूटिलिटी
+│   ├── pages/
+│   │   ├── Index.tsx                # मुख्य Apple HIG इंटरफेस
+│   │   └── NotFound.tsx             # ४०४ पृष्ठ
+│   ├── App.tsx                      # मुख्य एप्लिकेशन रूट
+│   ├── index.css                    # Apple लिक्विड ग्लास टोकन्स व एनिमेशन
+│   └── main.tsx                     # प्रवेश बिंदु
+├── index.html                       # अनुकूलित मेटाडेटा व गूगल फ़ॉन्ट्स
+├── tailwind.config.ts               # टेलविंड डिज़ाइन कॉन्फ़िगरेशन
+├── vite.config.ts                   # वाइट बिल्डर कॉन्फ़िग
+└── package.json                     # डिपेंडेंसी एवं स्क्रिप्ट्स
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
+## 📜 लाइसेंस (License)
 
-Simply open [Lovable](https://lovable.dev/projects/7677f337-65bf-461e-a02f-826db92102e0) and click on Share -> Publish.
+यह प्रोजेक्ट [MIT License](LICENSE) के अंतर्गत मुक्त एवं मुक्त-स्रोत (Open Source) है।
 
-## Can I connect a custom domain to my Lovable project?
+---
 
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+<div align="center">
+  <sub>निर्मित और संवर्धित: <b>Rahul Kumar</b> • Apple Design Excellence एवं शाश्वत हिंदी साहित्य को समर्पित</sub><br/>
+  <sub><i>"शब्द जहाँ समाप्त होते हैं, कविता वहीं से अपनी यात्रा आरंभ करती है।"</i></sub>
+</div>

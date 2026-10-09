@@ -1,86 +1,140 @@
-import { useState } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
+
+export interface GeneratedLiterature {
+  title: string;
+  category: string;
+  rasa: string;
+  muse: string;
+  content: string;
+  summary: string;
+  rhymes?: string[];
+  vocabulary?: { word: string; meaning: string }[];
+  meterNotes?: string;
+}
 
 export const useStoryGenerator = () => {
   const [generatedStory, setGeneratedStory] = useState("");
+  const [literatureDetail, setLiteratureDetail] = useState<GeneratedLiterature | null>(null);
   const [isGeneratingStory, setIsGeneratingStory] = useState(false);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [speechRate, setSpeechRate] = useState(0.9); // optimal cadence for poetry
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
-  const generateStory = async (prompt: string) => {
-    if (!prompt.trim()) {
-      toast({
-        title: "कृपया प्रॉम्प्ट दर्ज करें",
-        description: "कहानी जनरेट करने के लिए एक प्रॉम्प्ट आवश्यक है",
-        variant: "destructive",
-      });
-      return;
+  // Stop speech if unmounted
+  useEffect(() => {
+    return () => {
+      if (typeof window !== "undefined" && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  const generateStory = async (
+    prompt: string,
+    options?: {
+      category?: string;
+      rasa?: string;
+      muse?: string;
     }
+  ) => {
+    const topic = prompt.trim() || "प्रकृति, अंतर्मन और जीवन का सत्य";
+    const category = options?.category || "कविता";
+    const rasa = options?.rasa || "शांत रस";
+    const muse = options?.muse || "दिनकर व निराला शैली";
 
     setIsGeneratingStory(true);
-    
-    // Simulate AI processing delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
+
+    // Stop ongoing audio
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+      setIsPlayingAudio(false);
+    }
+
+    // Realistic synthesis delay with animation
+    await new Promise((resolve) => setTimeout(resolve, 1400));
+
     try {
-      // Free AI story generation using advanced templates and randomization
-      const storyTemplates = [
-        {
-          opening: "प्राचीन चीन के सुनहरे युग में",
-          setting: ["पर्वतों की ऊंची चोटियों पर", "नदी के मधुर तट पर", "बांस के घने जंगल में", "फूलों से भरे बगीचे में"],
-          poet: ["एक महान कवि रहता था", "एक दार्शनिक कवि वास करता था", "एक प्रकृति प्रेमी कवि था"],
-          journey: ["जो अपनी कलम से जादू करता था", "जिसकी कविताएं आत्मा को छू जाती थीं", "जो शब्दों में जीवन फूंक देता था"],
-        }
-      ];
-      
-      const themes = [
-        "चांद की रोशनी और शराब के नशे में",
-        "प्रकृति की सुंदरता और शांति में",
-        "जीवन के दुःख और संघर्ष में",
-        "प्रेम और विरह की पीड़ा में",
-        "सामाजिक न्याय और सत्य में"
-      ];
-      
-      const poeticLines = [
-        "बादलों के पार चांद मुस्कराता है,\nफूलों की खुशबू मन को भाता है।",
-        "पर्वत शिखर पर बैठा कवि,\nशब्दों में ढालता जीवन की कवि।",
-        "हवा में नाचते बांस के पेड़,\nसुनाते हैं प्रेम के मधुर छंद।",
-        "नदी की धारा जैसे जीवन की गति,\nकवि के मन में जगती नई स्फूर्ति।"
-      ];
-      
-      const template = storyTemplates[0];
-      const randomSetting = template.setting[Math.floor(Math.random() * template.setting.length)];
-      const randomPoet = template.poet[Math.floor(Math.random() * template.poet.length)];
-      const randomJourney = template.journey[Math.floor(Math.random() * template.journey.length)];
-      const randomTheme = themes[Math.floor(Math.random() * themes.length)];
-      const randomPoetry = poeticLines[Math.floor(Math.random() * poeticLines.length)];
-      
-      const generatedStory = `${template.opening}, ${randomSetting}, ${randomPoet} ${randomJourney}।
+      let title = "";
+      let verses = "";
+      let summary = "";
+      let meterNotes = "";
+      let vocabulary: { word: string; meaning: string }[] = [];
+      let rhymes: string[] = [];
 
-${prompt} के विषय में एक अनोखी कहानी यहाँ से शुरू होती है। ${randomTheme}, उसने जीवन के गहरे रहस्यों को समझा।
+      if (category === "दोहा") {
+        title = `अमृत दोहावली: ${topic}`;
+        verses = `माटी कहे कुम्हार से, समझ सकै तो जान।\nजो बीता सो स्वप्न था, वर्तमान पहचान॥\n\nमन की मैली चादरिया, धोवे निर्मल नीर।\nशब्द बाण जब छूटिगे, वेधत अंतःशरीर॥\n\nप्रेम बिना सब शून्य है, ज्ञान बिना अंधियार।\n${topic} में खोज ले, जग का सार अपार॥`;
+        summary = `यह दोहावली जीवन की अनित्यता, अंतःकरण की शुद्धि और '${topic}' के माध्यम से परम सत्य को खोजने का संदेश देती है।`;
+        meterNotes = "पारंपरिक दोहा छंद (१३-११ मात्राएं, गुरु-लघु अंत्य तुकबंदी)";
+        vocabulary = [
+          { word: "चादरिया", meaning: "मन का आवरण अथवा शरीर" },
+          { word: "वेधत", meaning: "गहराई तक भेदना" },
+          { word: "अंधियार", meaning: "अज्ञान का अंधकार" },
+        ];
+        rhymes = ["जान-पहचान", "नीर-शरीर", "अंधियार-अपार"];
+      } else if (category === "ग़ज़ल") {
+        title = `ग़ज़ल: ${topic} का उजाला`;
+        verses = `चिराग़ जलते रहे शाम से सहर की तरफ़,\nनज़र जो उट्ठी तिरी तो गए जिगर की तरफ़॥\n\nसफ़र में धूप तो होगी जो चल सको तो चलो,\nकदम बढ़े हैं मिरे जब भी रहगुज़र की तरफ़॥\n\nये ख़ामोशी भी कभी दास्तां सुनाती है,\nजो ध्यान जाए कभी दिल के इक हुनर की तरफ़॥\n\n${topic} का ये तसव्वुर निखर गया ऐसे,\nकि जैसे चाँद उतर आए बामो-दर की तरफ़॥`;
+        summary = `जीवन-यात्रा की धूप-छांव और '${topic}' की अनुभूति को कोमल लयात्मक शेरों में पिरोया गया है।`;
+        meterNotes = "बह़र-ए-हज़ज (मुफ़ाईलुन मुफ़ाईलुन), रदीफ़: 'की तरफ़'";
+        vocabulary = [
+          { word: "रहगुज़र", meaning: "रास्ता अथवा मार्ग" },
+          { word: "तसव्वुर", meaning: "कल्पना अथवा आत्मिक ध्यान" },
+          { word: "बामो-दर", meaning: "छत और दरवाज़ा / घर-आँगन" },
+        ];
+        rhymes = ["सहर", "जिगर", "रहगुज़र", "हुनर", "दर"];
+      } else if (category === "कहानी") {
+        title = `साहित्यिक कथा: ${topic} की खोज`;
+        verses = `प्राचीन काल की बात है, जब विंध्याचल की तराई में बहती निर्मल नदी के तट पर एक एकांत कुटीर थी। वहाँ एक साधक-कवि वास करता था, जिसके हृदय में '${topic}' का गहरा मंथन चल रहा था।\n\nप्रभात की सुनहरी किरणें जब पलाश के वनों को छूतीं, तब वह अपनी भोजपत्र की पाण्डुलिपि पर शब्द उकेरता। वह जानता था कि जो भाव अंतःकरण के ताप से नहीं तपते, वे कभी अमर साहित्य नहीं बनते।\n\nएक संध्या, जब बादलों ने अंबर को सिंदूरी आभा से नहला दिया, एक थका हुआ पथिक उसकी कुटी पर आया। पथिक ने पूछा— "हे कवि, संसार में सबसे बड़ा ऐश्वर्य क्या है?"\n\nकवि ने मंद मुस्कान के साथ अपनी लिखी पंक्तियाँ सुनाईं:\n"जिसने अपने भीतर के मौन को पहचान लिया, और पराई पीड़ा को अपनी आंख का आंसू बना लिया, वही जीवन का सम्राट है।"\n\nयह सुनकर पथिक का चित्त शांत हो गया। ${topic} का यह बोध सदियों तक उस अंचल में गूंजता रहा।`;
+        summary = `यह लघु कथा अंतर्मुखी साधना, परोपकार और '${topic}' के दार्शनिक स्वरूप को उजागर करती है।`;
+        meterNotes = "भावप्रधान गद्य-काव्य (Lyric Prose) शैली";
+        vocabulary = [
+          { word: "भोजपत्र", meaning: "प्राचीन काल में लेखन हेतु प्रयुक्त वृक्ष की छाल" },
+          { word: "अंतःकरण", meaning: "हृदय, मन और अंतरात्मा का सम्मिलित स्वरूप" },
+          { word: "चित्त", meaning: "चेतना और एकाग्र मन" },
+        ];
+      } else {
+        // कविता (Poetry - Default)
+        title = `काव्य सृजन: ${topic}`;
+        verses = `अंबर की नीरवता चीर,\nउठती जब कोई अंतर-पीर,\nकलम उठाता मौन विहग-सा,\nबहता निर्मल भाव-समीर।\n\nशिखर-शिखर पर धूप सुनहरी,\nघाट-घाट पर नदी गंभीर,\n${topic} का यह नव आह्वान,\nमिटा रहा मन का सब धीर।\n\nन हम रुकेंगे, न हम झुकेंगे,\nअग्नि-शिखा सम दीप जलेंगे,\nतिमिर चीर कर नूतन पथ पर,\nप्राण-स्पंदन संग चलेंगे!\n\nशब्द नहीं केवल ये स्पंदन,\nहैं युग-चेतना का अभिनंदन,\nजब तक श्वासों में कविता है,\nहोता रहेगा अमर समर्पण!`;
+        summary = `यह ओजस्वी रचना '${topic}' को केंद्र में रखकर नव-स्फूर्ति, अडिग संकल्प और काव्य-साधना का आह्वान करती है।`;
+        meterNotes = "मुक्त छंद व तुकांत चतुष्पदी (AABB छंद संरचना)";
+        vocabulary = [
+          { word: "नीरवता", meaning: "गहरा सन्नाटा / एकांत शांति" },
+          { word: "विहग", meaning: "पक्षी / मुक्त चेतना" },
+          { word: "तिमिर", meaning: "अंधकार" },
+          { word: "स्पंदन", meaning: "जीवन की आंतरिक धड़कन" },
+        ];
+        rhymes = ["चीर-पीर-समीर", "गंभीर-धीर", "जलेंगे-चलेंगे", "अभिनंदन-समर्पण"];
+      }
 
-हर सुबह सूर्योदय के साथ, वह प्रकृति के साथ बातचीत करता था। पंछियों के मधुर गीत, हवा की सरसराहट, और फूलों की सुगंध - ये सब उसकी प्रेरणा के स्रोत थे।
+      const generatedStoryFull = `${title}\n\nविधा: ${category} | रस: ${rasa} | शैली: ${muse}\n\n${verses}\n\nभावार्थ:\n${summary}`;
 
-लोग दूर-दूर से उसकी कविताएं सुनने आते थे। उसके शब्द दिलों को छूते थे और आत्मा को शांति देते थे।
+      const detail: GeneratedLiterature = {
+        title,
+        category,
+        rasa,
+        muse,
+        content: verses,
+        summary,
+        meterNotes,
+        vocabulary,
+        rhymes,
+      };
 
-एक दिन, गहरे ध्यान में लीन होकर, उसने लिखा:
+      setGeneratedStory(generatedStoryFull);
+      setLiteratureDetail(detail);
 
-"${randomPoetry}
-जीवन के इस सफर में,
-प्रेम ही सबसे सुंदर राह दिखाता है।"
-
-यह कहानी आज भी हमें सिखाती है कि सच्ची कविता वही है जो दिल से निकलती है और दिल तक पहुंचती है। ${prompt} की तरह, हम सभी में कुछ न कुछ कवि छुपा हुआ है।
-
-समय बीतता गया, लेकिन उसकी कविताओं की गूंज आज भी पर्वतों में सुनाई देती है।`;
-
-      setGeneratedStory(generatedStory);
       toast({
-        title: "कहानी सफलतापूर्वक जनरेट हुई!",
-        description: "AI ने आपकी हिंदी कहानी तैयार कर दी है",
+        title: "काव्य रचना संपन्न!",
+        description: `"${title}" सफलतापूर्वक सृजित हुई।`,
       });
-    } catch (error) {
-      console.error("Error generating story:", error);
+    } catch (err) {
+      console.error(err);
       toast({
-        title: "कहानी जनरेट करने में त्रुटि",
-        description: "कृपया पुनः प्रयास करें",
+        title: "सृजन में त्रुटि",
+        description: "कृपया पुनः प्रयास करें।",
         variant: "destructive",
       });
     } finally {
@@ -88,9 +142,60 @@ ${prompt} के विषय में एक अनोखी कहानी �
     }
   };
 
+  const toggleSpeechRecitation = useCallback(() => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+      toast({
+        title: "ऑडियो उपलब्ध नहीं",
+        description: "आपका ब्राउज़र स्पीच सिंथेसिस का समर्थन नहीं करता।",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (isPlayingAudio) {
+      window.speechSynthesis.cancel();
+      setIsPlayingAudio(false);
+      return;
+    }
+
+    const textToRead = literatureDetail ? `${literatureDetail.title}। ${literatureDetail.content}` : generatedStory;
+    if (!textToRead) return;
+
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(textToRead);
+    utteranceRef.current = utterance;
+
+    // Detect Hindi voice if available
+    const voices = window.speechSynthesis.getVoices();
+    const hindiVoice = voices.find((v) => v.lang.startsWith("hi") || v.lang.includes("IN"));
+    if (hindiVoice) {
+      utterance.voice = hindiVoice;
+    }
+    utterance.lang = "hi-IN";
+    utterance.rate = speechRate;
+    utterance.pitch = 1.0;
+
+    utterance.onend = () => {
+      setIsPlayingAudio(false);
+    };
+
+    utterance.onerror = () => {
+      setIsPlayingAudio(false);
+    };
+
+    window.speechSynthesis.speak(utterance);
+    setIsPlayingAudio(true);
+  }, [isPlayingAudio, literatureDetail, generatedStory, speechRate]);
+
   return {
     generatedStory,
+    literatureDetail,
     isGeneratingStory,
-    generateStory
+    isPlayingAudio,
+    speechRate,
+    setSpeechRate,
+    generateStory,
+    toggleSpeechRecitation,
+    setGeneratedStory,
   };
 };
