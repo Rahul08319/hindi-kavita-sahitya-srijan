@@ -3,18 +3,16 @@ import {
   Palette, 
   Sparkles, 
   Download, 
-  Share2, 
   Check, 
-  Layers, 
-  Eye, 
-  Feather,
-  RefreshCw
+  RefreshCw,
+  Stamp,
+  Crop
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { ArtStyle, availableArtStyles } from "@/hooks/useImageGenerator";
+import { ArtStyle, AspectRatioType, availableArtStyles } from "@/hooks/useImageGenerator";
 import { toast } from "@/hooks/use-toast";
 
 interface ImageTabProps {
@@ -22,8 +20,12 @@ interface ImageTabProps {
   isGeneratingImage: boolean;
   generatedStory: string;
   selectedStyle: ArtStyle;
+  aspectRatio: AspectRatioType;
+  sealText: string;
   onStyleChange: (style: ArtStyle) => void;
-  onGenerateImage: (text: string, style?: ArtStyle, title?: string) => void;
+  onAspectRatioChange: (ratio: AspectRatioType) => void;
+  onSealTextChange: (text: string) => void;
+  onGenerateImage: (text: string, style?: ArtStyle, title?: string, ratio?: AspectRatioType, seal?: string) => void;
   onDownloadImage: () => void;
 }
 
@@ -32,14 +34,17 @@ export const ImageTab: React.FC<ImageTabProps> = ({
   isGeneratingImage,
   generatedStory,
   selectedStyle,
+  aspectRatio,
+  sealText,
   onStyleChange,
+  onAspectRatioChange,
+  onSealTextChange,
   onGenerateImage,
   onDownloadImage,
 }) => {
   const [customTitle, setCustomTitle] = useState("");
   const [customText, setCustomText] = useState(generatedStory || "");
 
-  // Update customText if generatedStory changes and customText is empty
   React.useEffect(() => {
     if (generatedStory && !customText) {
       setCustomText(generatedStory);
@@ -56,11 +61,17 @@ export const ImageTab: React.FC<ImageTabProps> = ({
       });
       return;
     }
-    onGenerateImage(textToUse, selectedStyle, customTitle);
+    onGenerateImage(textToUse, selectedStyle, customTitle, aspectRatio, sealText);
   };
 
+  const aspectRatios: { id: AspectRatioType; label: string; desc: string }[] = [
+    { id: "16:9", label: "१६:९ लैंडस्केप", desc: "कम्प्यूटर / वॉलपेपर" },
+    { id: "1:1", label: "१:१ चौकोर", desc: "Instagram Post / DP" },
+    { id: "9:16", label: "९:१६ वर्टिकल", desc: "Reels / WhatsApp Story" },
+  ];
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-in fade-in duration-300">
       {/* Configuration Card */}
       <div className="apple-card p-6 md:p-8 relative overflow-hidden">
         <div className="flex items-center gap-2.5 mb-6">
@@ -113,11 +124,55 @@ export const ImageTab: React.FC<ImageTabProps> = ({
           </div>
         </div>
 
-        {/* 2. Text Input & Title */}
+        {/* 2. Aspect Ratio & Seal Settings Row */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div>
+            <label className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block mb-2 flex items-center gap-1.5">
+              <Crop className="w-3.5 h-3.5 text-orange-500" />
+              २. पोस्टर आकार एवं अनुपात (Aspect Ratio):
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              {aspectRatios.map((r) => (
+                <button
+                  key={r.id}
+                  type="button"
+                  onClick={() => onAspectRatioChange(r.id)}
+                  className={`p-2.5 rounded-xl border text-center transition-all ${
+                    aspectRatio === r.id
+                      ? "border-orange-600 bg-orange-500/10 text-orange-700 dark:text-orange-300 font-bold"
+                      : "border-black/[0.06] dark:border-white/[0.08] text-neutral-600 dark:text-neutral-300 hover:bg-black/[0.03]"
+                  }`}
+                >
+                  <span className="text-xs block">{r.label}</span>
+                  <span className="text-[10px] text-neutral-400 block">{r.desc}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block mb-2 flex items-center gap-1.5">
+              <Stamp className="w-3.5 h-3.5 text-rose-500" />
+              ३. शाही लाल मुहर का नाम (Poet Seal / Takhallus):
+            </label>
+            <Input
+              type="text"
+              placeholder="उदा: साहित्य सृजन अथवा आपका उपनाम"
+              value={sealText}
+              onChange={(e) => onSealTextChange(e.target.value)}
+              className="bg-white/60 dark:bg-black/20 border-black/[0.08] dark:border-white/[0.08] rounded-xl text-xs h-11"
+            />
+            <p className="text-[11px] text-neutral-400 mt-1">
+              पोस्टर के निचले कोने में पारंपरिक लाल सिंदूरी मुहर पर अंकित होगा
+            </p>
+          </div>
+        </div>
+
+        {/* 3. Text Input & Title */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="md:col-span-1 space-y-2">
             <label className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block">
-              २. पोस्टर शीर्षक (Optional Title):
+              ४. पोस्टर शीर्षक (Optional Title):
             </label>
             <Input
               type="text"
@@ -133,7 +188,7 @@ export const ImageTab: React.FC<ImageTabProps> = ({
 
           <div className="md:col-span-2 space-y-2">
             <label className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block">
-              ३. पोस्टर में प्रदर्शित होने वाली काव्य पंक्तियाँ:
+              ५. पोस्टर में प्रदर्शित होने वाली काव्य पंक्तियाँ:
             </label>
             <Textarea
               placeholder="काव्य पंक्तियाँ यहाँ डालें..."
@@ -171,7 +226,7 @@ export const ImageTab: React.FC<ImageTabProps> = ({
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <Badge variant="outline" className="text-xs bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30">
-                  ✦ १२00 x ८00 Retina 2x रिज़ॉल्यूशन
+                  ✦ Retina 2x रिज़ॉल्यूशन ({aspectRatio})
                 </Badge>
                 <span className="text-xs text-neutral-400">
                   शैली: {availableArtStyles.find((s) => s.id === selectedStyle)?.hindiName}

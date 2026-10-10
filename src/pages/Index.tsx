@@ -12,14 +12,15 @@ import {
   Calendar,
   Compass,
   Heart,
-  Layers
+  Layers,
+  Radio
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 import { useStoryGenerator } from "@/hooks/useStoryGenerator";
-import { useImageGenerator, ArtStyle } from "@/hooks/useImageGenerator";
+import { useImageGenerator, ArtStyle, AspectRatioType } from "@/hooks/useImageGenerator";
 import { useFacebookPoster } from "@/hooks/useFacebookPoster";
 import { getDynamicYearData } from "@/lib/dynamicYear";
 
@@ -27,7 +28,9 @@ import { AppleBentoGrid } from "@/components/AppleBentoGrid";
 import { StoryTab } from "@/components/StoryTab";
 import { ImageTab } from "@/components/ImageTab";
 import { LibraryTab } from "@/components/LibraryTab";
+import { ChhandLabTab } from "@/components/ChhandLabTab";
 import { SocialTab } from "@/components/SocialTab";
+import { AmbientSoundBar } from "@/components/AmbientSoundBar";
 
 const Index = () => {
   const dynamicData = getDynamicYearData();
@@ -48,6 +51,10 @@ const Index = () => {
     generatedImage,
     isGeneratingImage,
     selectedStyle,
+    aspectRatio,
+    sealText,
+    setSealText,
+    setAspectRatio,
     setSelectedStyle,
     generateImage,
     downloadImage,
@@ -91,11 +98,11 @@ const Index = () => {
 
   const handleSendToArtStudio = (text: string, title?: string) => {
     setActiveTab("image");
-    generateImage(text, selectedStyle, title);
+    generateImage(text, selectedStyle, title, aspectRatio, sealText);
   };
 
   return (
-    <div className="min-h-screen bg-[#fbfbfd] text-[#1d1d1f] dark:bg-[#000000] dark:text-[#f5f5f7] transition-colors duration-300">
+    <div className="min-h-screen bg-[#fbfbfd] text-[#1d1d1f] dark:bg-[#000000] dark:text-[#f5f5f7] transition-colors duration-300 relative">
       
       {/* 1. Apple Frosted Glass Sticky Navigation Header */}
       <header className="apple-glass sticky top-0 z-50 border-b border-black/[0.06] dark:border-white/[0.08]">
@@ -182,11 +189,11 @@ const Index = () => {
             
             {/* Apple Segmented Control Pill List */}
             <div className="flex justify-center mb-8">
-              <TabsList className="p-1.5 h-auto rounded-full bg-black/[0.04] dark:bg-white/[0.06] border border-black/[0.06] dark:border-white/[0.08] backdrop-blur-xl grid grid-cols-2 sm:grid-cols-4 gap-1 w-full max-w-2xl">
+              <TabsList className="p-1.5 h-auto rounded-full bg-black/[0.04] dark:bg-white/[0.06] border border-black/[0.06] dark:border-white/[0.08] backdrop-blur-xl grid grid-cols-2 sm:grid-cols-5 gap-1 w-full max-w-3xl">
                 
                 <TabsTrigger
                   value="generate"
-                  className="rounded-full py-2.5 px-4 text-xs font-semibold data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-800 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-white data-[state=active]:shadow-sm transition-all flex items-center justify-center gap-1.5"
+                  className="rounded-full py-2.5 px-3 text-xs font-semibold data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-800 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-white data-[state=active]:shadow-sm transition-all flex items-center justify-center gap-1.5"
                 >
                   <PenTool className="w-3.5 h-3.5" />
                   <span>काव्य सृजन</span>
@@ -194,7 +201,7 @@ const Index = () => {
 
                 <TabsTrigger
                   value="image"
-                  className="rounded-full py-2.5 px-4 text-xs font-semibold data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-800 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-white data-[state=active]:shadow-sm transition-all flex items-center justify-center gap-1.5"
+                  className="rounded-full py-2.5 px-3 text-xs font-semibold data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-800 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-white data-[state=active]:shadow-sm transition-all flex items-center justify-center gap-1.5"
                 >
                   <Palette className="w-3.5 h-3.5" />
                   <span>चित्रशाला</span>
@@ -202,15 +209,23 @@ const Index = () => {
 
                 <TabsTrigger
                   value="library"
-                  className="rounded-full py-2.5 px-4 text-xs font-semibold data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-800 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-white data-[state=active]:shadow-sm transition-all flex items-center justify-center gap-1.5"
+                  className="rounded-full py-2.5 px-3 text-xs font-semibold data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-800 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-white data-[state=active]:shadow-sm transition-all flex items-center justify-center gap-1.5"
                 >
                   <BookOpen className="w-3.5 h-3.5" />
                   <span>ग्रंथावली</span>
                 </TabsTrigger>
 
                 <TabsTrigger
+                  value="chhand"
+                  className="rounded-full py-2.5 px-3 text-xs font-semibold data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-800 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-white data-[state=active]:shadow-sm transition-all flex items-center justify-center gap-1.5"
+                >
+                  <Compass className="w-3.5 h-3.5" />
+                  <span>छंद लैब</span>
+                </TabsTrigger>
+
+                <TabsTrigger
                   value="social"
-                  className="rounded-full py-2.5 px-4 text-xs font-semibold data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-800 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-white data-[state=active]:shadow-sm transition-all flex items-center justify-center gap-1.5"
+                  className="rounded-full py-2.5 px-3 text-xs font-semibold data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-800 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-white data-[state=active]:shadow-sm transition-all flex items-center justify-center gap-1.5"
                 >
                   <Share2 className="w-3.5 h-3.5" />
                   <span>साझाकरण</span>
@@ -239,7 +254,11 @@ const Index = () => {
                 isGeneratingImage={isGeneratingImage}
                 generatedStory={generatedStory}
                 selectedStyle={selectedStyle}
+                aspectRatio={aspectRatio}
+                sealText={sealText}
                 onStyleChange={setSelectedStyle}
+                onAspectRatioChange={setAspectRatio}
+                onSealTextChange={setSealText}
                 onGenerateImage={generateImage}
                 onDownloadImage={downloadImage}
               />
@@ -252,7 +271,12 @@ const Index = () => {
               />
             </TabsContent>
 
-            {/* Tab 4: Social Sharing & Facebook API */}
+            {/* Tab 4: Interactive Hindi Chhand & Matra Lab */}
+            <TabsContent value="chhand" className="outline-none">
+              <ChhandLabTab />
+            </TabsContent>
+
+            {/* Tab 5: Social Sharing & Facebook API */}
             <TabsContent value="social" className="outline-none">
               <SocialTab
                 generatedStory={generatedStory}
@@ -275,6 +299,9 @@ const Index = () => {
         </div>
 
       </main>
+
+      {/* Floating Apple-style Ambient Soundscape Bar */}
+      <AmbientSoundBar />
 
       {/* 5. Apple Minimalist Footer */}
       <footer className="mt-20 border-t border-black/[0.06] dark:border-white/[0.08] py-10 px-4">

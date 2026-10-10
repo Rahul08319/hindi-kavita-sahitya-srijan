@@ -2,6 +2,7 @@ import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 
 export type ArtStyle = "parchment" | "moonlight" | "misty_ink" | "blossom" | "obsidian_glass";
+export type AspectRatioType = "16:9" | "1:1" | "9:16";
 
 export interface ArtStyleOption {
   id: ArtStyle;
@@ -53,11 +54,15 @@ export const useImageGenerator = () => {
   const [generatedImage, setGeneratedImage] = useState("");
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const [selectedStyle, setSelectedStyle] = useState<ArtStyle>("parchment");
+  const [aspectRatio, setAspectRatio] = useState<AspectRatioType>("16:9");
+  const [sealText, setSealText] = useState("साहित्य सृजन");
 
   const generateImage = async (
     generatedStory: string,
     forcedStyle?: ArtStyle,
-    customTitle?: string
+    customTitle?: string,
+    ratio?: AspectRatioType,
+    customSeal?: string
   ) => {
     if (!generatedStory) {
       toast({
@@ -70,14 +75,27 @@ export const useImageGenerator = () => {
 
     setIsGeneratingImage(true);
     const styleToUse = forcedStyle || selectedStyle;
+    const ratioToUse = ratio || aspectRatio;
+    const stampWord = customSeal || sealText || "साहित्य सृजन";
 
     // Realistic synthesis delay
-    await new Promise((resolve) => setTimeout(resolve, 1800));
+    await new Promise((resolve) => setTimeout(resolve, 1400));
 
     try {
       const canvas = document.createElement("canvas");
-      canvas.width = 1200;
-      canvas.height = 800;
+      let width = 1200;
+      let height = 800;
+
+      if (ratioToUse === "1:1") {
+        width = 1000;
+        height = 1000;
+      } else if (ratioToUse === "9:16") {
+        width = 800;
+        height = 1422;
+      }
+
+      canvas.width = width;
+      canvas.height = height;
       const ctx = canvas.getContext("2d");
 
       if (!ctx) {
@@ -89,11 +107,12 @@ export const useImageGenerator = () => {
       const allLines = cleanText.split("\n").filter((l) => l.trim().length > 0);
       const title = customTitle || allLines[0]?.replace(/[#*]/g, "").slice(0, 45) || "हिंदी साहित्य सृजन";
 
-      // Select 4-6 most lyrical lines for the visual card
+      // Select lyrical lines
+      const maxLines = ratioToUse === "9:16" ? 9 : 6;
       const lyricalLines = allLines
         .slice(1)
         .filter((l) => !l.startsWith("विधा:") && !l.startsWith("भावार्थ:") && l.length > 3)
-        .slice(0, 6);
+        .slice(0, maxLines);
 
       if (lyricalLines.length === 0) {
         lyricalLines.push(cleanText.slice(0, 160));
@@ -104,18 +123,18 @@ export const useImageGenerator = () => {
       // ==========================================
       if (styleToUse === "parchment") {
         // Royal Parchment / Bhojpatra texture
-        const bgGrad = ctx.createRadialGradient(600, 400, 100, 600, 400, 700);
+        const bgGrad = ctx.createRadialGradient(width / 2, height / 2, 100, width / 2, height / 2, Math.max(width, height) / 1.5);
         bgGrad.addColorStop(0, "#fcf6e8");
         bgGrad.addColorStop(0.5, "#f5e8cf");
         bgGrad.addColorStop(0.85, "#ebd5b0");
         bgGrad.addColorStop(1, "#dfc294");
         ctx.fillStyle = bgGrad;
-        ctx.fillRect(0, 0, 1200, 800);
+        ctx.fillRect(0, 0, width, height);
 
         // Subtle parchment fiber specks
-        for (let i = 0; i < 400; i++) {
-          const x = Math.random() * 1200;
-          const y = Math.random() * 800;
+        for (let i = 0; i < 450; i++) {
+          const x = Math.random() * width;
+          const y = Math.random() * height;
           const length = 2 + Math.random() * 5;
           ctx.strokeStyle = `rgba(180, 140, 90, ${0.05 + Math.random() * 0.08})`;
           ctx.lineWidth = 0.8;
@@ -128,39 +147,25 @@ export const useImageGenerator = () => {
         // Gold Filigree Ornate Outer & Inner Borders
         ctx.strokeStyle = "rgba(180, 130, 60, 0.75)";
         ctx.lineWidth = 6;
-        ctx.strokeRect(36, 36, 1128, 728);
+        ctx.strokeRect(36, 36, width - 72, height - 72);
 
         ctx.strokeStyle = "rgba(195, 145, 75, 0.4)";
         ctx.lineWidth = 1.5;
-        ctx.strokeRect(48, 48, 1104, 704);
-
-        // Corner Ornamental Brackets
-        const corners = [
-          [36, 36],
-          [1164, 36],
-          [36, 764],
-          [1164, 764],
-        ];
-        corners.forEach(([cx, cy]) => {
-          ctx.fillStyle = "#b4823c";
-          ctx.beginPath();
-          ctx.arc(cx, cy, 8, 0, Math.PI * 2);
-          ctx.fill();
-        });
+        ctx.strokeRect(48, 48, width - 96, height - 96);
       } else if (styleToUse === "moonlight") {
         // Deep Indigo Moonlit Twilight
-        const bgGrad = ctx.createLinearGradient(0, 0, 0, 800);
+        const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
         bgGrad.addColorStop(0, "#080c1a");
         bgGrad.addColorStop(0.5, "#0f172a");
         bgGrad.addColorStop(0.8, "#172554");
         bgGrad.addColorStop(1, "#030712");
         ctx.fillStyle = bgGrad;
-        ctx.fillRect(0, 0, 1200, 800);
+        ctx.fillRect(0, 0, width, height);
 
-        // Distant Stars
-        for (let i = 0; i < 90; i++) {
-          const sx = Math.random() * 1200;
-          const sy = Math.random() * 500;
+        // Stars
+        for (let i = 0; i < 110; i++) {
+          const sx = Math.random() * width;
+          const sy = Math.random() * (height * 0.6);
           const radius = Math.random() * 1.5;
           ctx.fillStyle = `rgba(255, 255, 255, ${0.3 + Math.random() * 0.7})`;
           ctx.beginPath();
@@ -168,8 +173,8 @@ export const useImageGenerator = () => {
           ctx.fill();
         }
 
-        // Radiant Full Moon with Glow
-        const moonX = 980;
+        // Moon
+        const moonX = width - 180;
         const moonY = 160;
         const moonGlow = ctx.createRadialGradient(moonX, moonY, 10, moonX, moonY, 140);
         moonGlow.addColorStop(0, "rgba(254, 240, 138, 0.4)");
@@ -185,96 +190,45 @@ export const useImageGenerator = () => {
         ctx.arc(moonX, moonY, 52, 0, Math.PI * 2);
         ctx.fill();
 
-        // Misty Mountains Silhouette
-        ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
-        ctx.beginPath();
-        ctx.moveTo(0, 680);
-        ctx.lineTo(240, 560);
-        ctx.lineTo(520, 620);
-        ctx.lineTo(820, 520);
-        ctx.lineTo(1200, 640);
-        ctx.lineTo(1200, 800);
-        ctx.lineTo(0, 800);
-        ctx.closePath();
-        ctx.fill();
-
-        // Moonlit Water Reflection
-        const waterGrad = ctx.createLinearGradient(0, 680, 0, 800);
-        waterGrad.addColorStop(0, "rgba(30, 58, 138, 0.4)");
-        waterGrad.addColorStop(1, "rgba(10, 15, 30, 0.9)");
-        ctx.fillStyle = waterGrad;
-        ctx.fillRect(0, 680, 1200, 120);
-
-        // Apple Glass Silver Border
         ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
         ctx.lineWidth = 2;
-        ctx.strokeRect(40, 40, 1120, 720);
+        ctx.strokeRect(36, 36, width - 72, height - 72);
       } else if (styleToUse === "misty_ink") {
-        // Misty Ink Wash / Sumi-e Mountains
-        const bgGrad = ctx.createLinearGradient(0, 0, 0, 800);
+        // Misty Ink Mountains
+        const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
         bgGrad.addColorStop(0, "#ececec");
         bgGrad.addColorStop(0.4, "#dfdfdf");
         bgGrad.addColorStop(0.8, "#c8c8c8");
         bgGrad.addColorStop(1, "#b0b0b0");
         ctx.fillStyle = bgGrad;
-        ctx.fillRect(0, 0, 1200, 800);
+        ctx.fillRect(0, 0, width, height);
 
-        // Distant soft ink mountains
+        // Mountain silhouettes
         ctx.fillStyle = "rgba(80, 80, 80, 0.25)";
         ctx.beginPath();
-        ctx.moveTo(0, 500);
-        ctx.quadraticCurveTo(300, 320, 600, 480);
-        ctx.quadraticCurveTo(900, 300, 1200, 460);
-        ctx.lineTo(1200, 800);
-        ctx.lineTo(0, 800);
+        ctx.moveTo(0, height * 0.65);
+        ctx.quadraticCurveTo(width * 0.25, height * 0.45, width * 0.5, height * 0.6);
+        ctx.quadraticCurveTo(width * 0.75, height * 0.4, width, height * 0.58);
+        ctx.lineTo(width, height);
+        ctx.lineTo(0, height);
         ctx.fill();
-
-        // Fore mountain
-        ctx.fillStyle = "rgba(40, 40, 40, 0.45)";
-        ctx.beginPath();
-        ctx.moveTo(0, 620);
-        ctx.quadraticCurveTo(400, 460, 800, 600);
-        ctx.lineTo(1200, 540);
-        ctx.lineTo(1200, 800);
-        ctx.lineTo(0, 800);
-        ctx.fill();
-
-        // Delicate bamboo stalks on right side
-        for (let b = 0; b < 6; b++) {
-          const bx = 1040 + b * 24;
-          const bh = 420 + Math.random() * 80;
-          ctx.fillStyle = "rgba(35, 35, 35, 0.75)";
-          ctx.fillRect(bx, 800 - bh, 5, bh);
-
-          // Bamboo leaf pairs
-          for (let leaf = 0; leaf < 7; leaf++) {
-            const ly = 800 - bh + leaf * 55;
-            ctx.beginPath();
-            ctx.ellipse(bx - 12, ly, 16, 4, -0.4, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.ellipse(bx + 16, ly + 8, 18, 4, 0.35, 0, Math.PI * 2);
-            ctx.fill();
-          }
-        }
 
         ctx.strokeStyle = "rgba(40, 40, 40, 0.5)";
         ctx.lineWidth = 3;
-        ctx.strokeRect(36, 36, 1128, 728);
+        ctx.strokeRect(36, 36, width - 72, height - 72);
       } else if (styleToUse === "blossom") {
         // Spring Sunset & Blossom
-        const bgGrad = ctx.createLinearGradient(0, 0, 1200, 800);
+        const bgGrad = ctx.createLinearGradient(0, 0, width, height);
         bgGrad.addColorStop(0, "#fff1f2");
         bgGrad.addColorStop(0.35, "#fed7aa");
         bgGrad.addColorStop(0.7, "#fbcfe8");
         bgGrad.addColorStop(1, "#f43f5e");
         ctx.fillStyle = bgGrad;
-        ctx.fillRect(0, 0, 1200, 800);
+        ctx.fillRect(0, 0, width, height);
 
-        // Floating flower petals
-        for (let p = 0; p < 35; p++) {
-          const px = Math.random() * 1200;
-          const py = Math.random() * 800;
+        for (let p = 0; p < 40; p++) {
+          const px = Math.random() * width;
+          const py = Math.random() * height;
           const rot = Math.random() * Math.PI;
           ctx.fillStyle = `rgba(244, 63, 94, ${0.25 + Math.random() * 0.45})`;
           ctx.beginPath();
@@ -284,29 +238,23 @@ export const useImageGenerator = () => {
 
         ctx.strokeStyle = "rgba(225, 29, 72, 0.4)";
         ctx.lineWidth = 3;
-        ctx.strokeRect(40, 40, 1120, 720);
+        ctx.strokeRect(36, 36, width - 72, height - 72);
       } else {
-        // Apple Obsidian Glass (Dark High-End Minimalist)
-        const bgGrad = ctx.createLinearGradient(0, 0, 1200, 800);
+        // Apple Obsidian Glass
+        const bgGrad = ctx.createLinearGradient(0, 0, width, height);
         bgGrad.addColorStop(0, "#000000");
         bgGrad.addColorStop(0.5, "#09090b");
         bgGrad.addColorStop(1, "#18181b");
         ctx.fillStyle = bgGrad;
-        ctx.fillRect(0, 0, 1200, 800);
+        ctx.fillRect(0, 0, width, height);
 
-        // Center Frosted Plate
         ctx.fillStyle = "rgba(255, 255, 255, 0.04)";
-        ctx.roundRect(80, 80, 1040, 640, 24);
+        ctx.roundRect(70, 70, width - 140, height - 140, 24);
         ctx.fill();
-
-        // Apple Specular Rim Highlight
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.14)";
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
 
         ctx.strokeStyle = "rgba(234, 88, 12, 0.5)";
         ctx.lineWidth = 2;
-        ctx.strokeRect(40, 40, 1120, 720);
+        ctx.strokeRect(36, 36, width - 72, height - 72);
       }
 
       // ==========================================
@@ -317,79 +265,84 @@ export const useImageGenerator = () => {
       const accentColor = isDarkTheme ? "#fb923c" : "#c2410c";
       const secondaryTextColor = isDarkTheme ? "rgba(248, 250, 252, 0.75)" : "rgba(63, 63, 70, 0.85)";
 
-      // Top Decorative Motif / Header
+      // Top Motif
       ctx.textAlign = "center";
       ctx.fillStyle = accentColor;
-      ctx.font = "bold 20px -apple-system, system-ui, sans-serif";
-      ctx.fillText("✦  हिंदी कविता साहित्य सृजन पीठ  ✦", 600, 120);
+      ctx.font = "bold 18px -apple-system, system-ui, sans-serif";
+      ctx.fillText("✦  हिंदी कविता साहित्य सृजन पीठ  ✦", width / 2, 110);
 
       // Title
       ctx.fillStyle = textColor;
-      ctx.font = "bold 42px 'Rozha One', 'Tiro Devanagari Hindi', serif";
-      ctx.fillText(title, 600, 195);
+      ctx.font = "bold 40px 'Rozha One', 'Tiro Devanagari Hindi', serif";
+      ctx.fillText(title, width / 2, 185);
 
-      // Divider Line with diamond
+      // Divider
       ctx.strokeStyle = accentColor;
       ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.moveTo(420, 230);
-      ctx.lineTo(580, 230);
-      ctx.moveTo(620, 230);
-      ctx.lineTo(780, 230);
+      ctx.moveTo(width / 2 - 160, 220);
+      ctx.lineTo(width / 2 - 20, 220);
+      ctx.moveTo(width / 2 + 20, 220);
+      ctx.lineTo(width / 2 + 160, 220);
       ctx.stroke();
 
       ctx.fillStyle = accentColor;
       ctx.beginPath();
-      ctx.arc(600, 230, 4, 0, Math.PI * 2);
+      ctx.arc(width / 2, 220, 4, 0, Math.PI * 2);
       ctx.fill();
 
-      // Poem Lines
+      // Verses
       ctx.fillStyle = secondaryTextColor;
       ctx.font = "500 28px 'Tiro Devanagari Hindi', 'Noto Serif Devanagari', serif";
+      const startY = ratioToUse === "9:16" ? 360 : 310;
+      const lineHeight = ratioToUse === "9:16" ? 64 : 52;
 
-      const startY = 320;
-      const lineHeight = 52;
       lyricalLines.forEach((line, idx) => {
-        ctx.fillText(line, 600, startY + idx * lineHeight);
+        ctx.fillText(line, width / 2, startY + idx * lineHeight);
       });
 
       // ==========================================
-      // 3. TRADITIONAL RED ROYAL SEAL STAMP (मुद्रा)
+      // 3. ROYAL SEAL STAMP (मुद्रा)
       // ==========================================
-      const sealX = 1040;
-      const sealY = 670;
+      const sealX = width - 130;
+      const sealY = height - 120;
       ctx.save();
       ctx.translate(sealX, sealY);
-      ctx.rotate(-0.06); // organic angle
+      ctx.rotate(-0.06);
 
       ctx.strokeStyle = "#dc2626";
       ctx.lineWidth = 3;
-      ctx.strokeRect(-40, -40, 80, 80);
+      ctx.strokeRect(-38, -38, 76, 76);
 
       ctx.fillStyle = "rgba(220, 38, 38, 0.12)";
-      ctx.fillRect(-38, -38, 76, 76);
+      ctx.fillRect(-36, -36, 72, 72);
 
       ctx.fillStyle = "#dc2626";
-      ctx.font = "bold 15px 'Tiro Devanagari Hindi', serif";
+      ctx.font = "bold 14px 'Tiro Devanagari Hindi', serif";
       ctx.textAlign = "center";
-      ctx.fillText("साहित्य", 0, -12);
-      ctx.fillText("सृजन", 0, 10);
-      ctx.fillText("मुद्रा", 0, 28);
+      const stampWords = stampWord.split(" ");
+      if (stampWords.length >= 2) {
+        ctx.fillText(stampWords[0], 0, -8);
+        ctx.fillText(stampWords.slice(1).join(" "), 0, 14);
+      } else {
+        ctx.fillText(stampWord, 0, 0);
+        ctx.fillText("मुद्रा", 0, 18);
+      }
       ctx.restore();
 
-      // Footer branding
+      // Footer
       ctx.textAlign = "center";
       ctx.fillStyle = isDarkTheme ? "rgba(255, 255, 255, 0.45)" : "rgba(0, 0, 0, 0.45)";
       ctx.font = "14px -apple-system, system-ui, sans-serif";
       const year = new Date().getFullYear();
-      ctx.fillText(`© ${year} Hindi Kavita Sahitya Srijan • Apple Design Collection`, 600, 735);
+      ctx.fillText(`© ${year} Hindi Kavita Sahitya Srijan • Apple Collection`, width / 2, height - 55);
 
       const imageUrl = canvas.toDataURL("image/png", 1.0);
       setGeneratedImage(imageUrl);
 
       toast({
         title: "कलात्मक पोस्टर सृजित हुआ!",
-        description: `शैली: ${availableArtStyles.find((s) => s.id === styleToUse)?.hindiName}`,
+        description: `शैली: ${availableArtStyles.find((s) => s.id === styleToUse)?.hindiName} • अनुपात: ${ratioToUse}`,
       });
     } catch (err) {
       console.error(err);
@@ -422,6 +375,10 @@ export const useImageGenerator = () => {
     generatedImage,
     isGeneratingImage,
     selectedStyle,
+    aspectRatio,
+    sealText,
+    setSealText,
+    setAspectRatio,
     setSelectedStyle,
     generateImage,
     downloadImage,
